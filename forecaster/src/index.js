@@ -314,7 +314,7 @@ async function handleRequest(request) {
                         }).addTo(map);
                     </script>
 
-                    <video playsinline autoplay muted loop src='https://content.kpnc.io/vid/dubai16.mp4' preload='metadata'></video>
+                    <video playsinline autoplay muted loop src='https://content.kpnc.io/vid/suburb10.mp4' preload='metadata'></video>
                 </body>
 
                 <script>
@@ -344,10 +344,10 @@ async function handleRequest(request) {
                     setInterval(() => set(new Date()), 1000);
 
                     let date = new Date();
-                    let time = ((((date.getHours() * 60) + date.getMinutes()) * 60) + date.getSeconds()) * 0.0625;
+                    let time = ((((date.getHours() * 60) + date.getMinutes()) * 60) + date.getSeconds()) * 0.1;
 
                     document.querySelector('video').addEventListener('loadeddata', function() {
-                        this.playbackRate = 0.0625;
+                        this.playbackRate = 0.1;
                         this.currentTime = time;
                     }, false);
 
