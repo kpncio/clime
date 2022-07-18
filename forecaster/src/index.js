@@ -4,48 +4,76 @@
 async function handleRequest(request) {
 	const { searchParams } = new URL(request.url);
 	let api = searchParams.get('api');
+    let nav = searchParams.get('nav');
+    let latitude = searchParams.get('debug_lat');
+    let longitude = searchParams.get('debug_lon');
+    let country = searchParams.get('debug_con');
 
-    let lat = searchParams.get('debug_lat');
-    let lon = searchParams.get('debug_lon');
-    let loc = searchParams.get('debug_loc');
-    if (lat == null) { lat = request.cf.latitude }
-    if (lon == null) { lon = request.cf.longitude }
-    if (loc == null) { loc = request.cf.country }
+    if (nav != null) { latitude = nav.split(',')[0]; longitude = nav.split(',')[1] }
 
-    const foo = `https://api.waqi.info/feed/geo:${lat};${lon}/?token=08a24e19cc61923175a239e65bdcad1ca6dab5ac`;
-	const one = await fetch(foo, {headers: {'content-type': 'application/json;charset=UTF-8',},});
-	const aqicn = await one.json();
+    if (latitude == null || longitude == null) { latitude = request.cf.latitude; longitude = request.cf.longitude }
 
-    const bar = `https://api.airvisual.com/v2/nearest_city?lat=${lat}&lon=${lon}&key=c7dcbf45-98aa-4280-9705-98c2074d99f9`;
-	const two = await fetch(bar, {headers: {'content-type': 'application/json;charset=UTF-8',},});
-	const iqair = await two.json();
+	const url = await fetch(
+        `https://api.weatherapi.com/v1/current.json?key=4ed5f0607b694dadbcf84326221807&q=${latitude},${longitude}&aqi=yes`, {
+            headers: {
+                'content-type': 'application/json;charset=UTF-8',
+            },
+        });
+	const data = await url.json();
+
+    const locales = { 'Afghanistan': 'AF', 'Aland Islands': 'AX', 'Albania': 'AL', 'Algeria': 'DZ', 'American Samoa': 'AS', 'Andorra': 'AD', 'Angola': 'AO', 'Anguilla': 'AI', 'Antarctica': 'AQ', 'Antigua and Barbuda': 'AG', 'Argentina': 'AR', 'Armenia': 'AM', 'Aruba': 'AW', 'Australia': 'AU', 'Austria': 'AT', 'Azerbaijan': 'AZ', 'Bahamas': 'BS', 'Bahrain': 'BH', 'Bangladesh': 'BD', 'Barbados': 'BB', 'Belarus': 'BY', 'Belgium': 'BE', 'Belize': 'BZ', 'Benin': 'BJ', 'Bermuda': 'BM', 'Bhutan': 'BT', 'Bolivia': 'BO', 'Netherlands Antilles': 'BQ', 'Bosnia and Herzegovina': 'BA', 'Botswana': 'BW', 'Bouvet Island': 'BV', 'Brazil': 'BR', 'British Indian Ocean Territory': 'IO', 'Brunei Darussalam': 'BN', 'Bulgaria': 'BG', 'Burkina Faso': 'BF', 'Burundi': 'BI', 'Cambodia': 'KH', 'Cameroon': 'CM', 'Canada': 'CA', 'Cape Verde': 'CV', 'Cayman Islands': 'KY', 'Central African Republic': 'CF', 'Chad': 'TD', 'Chile': 'CL', 'China': 'CN', 'Christmas Island': 'CX', 'Cocos (Keeling) Islands': 'CC', 'Colombia': 'CO', 'Comoros': 'KM', 'Congo': 'CG', 'Democratic Republic of Congo': 'CD', 'Cook Islands': 'CK', 'Costa Rica': 'CR', 'Cote d\'Ivoire': 'CI', 'Croatia': 'HR', 'Cuba': 'CU', 'Curacao': 'CW', 'Cyprus': 'CY', 'Czech Republic': 'CZ', 'Denmark': 'DK', 'Djibouti': 'DJ', 'Dominica': 'DM', 'Dominican Republic': 'DO', 'Ecuador': 'EC', 'Egypt': 'EG', 'El Salvador': 'SV', 'Equatorial Guinea': 'GQ', 'Eritrea': 'ER', 'Estonia': 'EE', 'Ethiopia': 'ET', 'Falkland Islands': 'FK', 'Faroe Islands': 'FO', 'Fiji': 'FJ', 'Finland': 'FI', 'France': 'FR', 'French Guiana': 'GF', 'French Polynesia': 'PF', 'French Southern Territories': 'TF', 'Gabon': 'GA', 'Gambia': 'GM', 'Georgia': 'GE', 'Germany': 'DE', 'Ghana': 'GH', 'Gibraltar': 'GI', 'Greece': 'GR', 'Greenland': 'GL', 'Grenada': 'GD', 'Guadeloupe': 'GP', 'Guam': 'GU', 'Guatemala': 'GT', 'Guernsey': 'GG', 'Guinea': 'GN', 'Guinea-Bissau': 'GW', 'Guyana': 'GY', 'Haiti': 'HT', 'Heard Island and McDonald Islands': 'HM', 'Vatican City': 'VA', 'Honduras': 'HN', 'Hong Kong': 'HK', 'Hungary': 'HU', 'Iceland': 'IS', 'India': 'IN', 'Indonesia': 'ID', 'Iran': 'IR', 'Iraq': 'IQ', 'Ireland': 'IE', 'Isle of Man': 'IM', 'Israel': 'IL', 'Italy': 'IT', 'Jamaica': 'JM', 'Japan': 'JP', 'Jersey': 'JE', 'Jordan': 'JO', 'Kazakhstan': 'KZ', 'Kenya': 'KE', 'Kiribati': 'KI', 'North Korea': 'KP', 'South Korea': 'KR', 'Kuwait': 'KW', 'Kyrgyzstan': 'KG', 'Lao People\'s Democratic Republic': 'LA', 'Latvia': 'LV', 'Lebanon': 'LB', 'Lesotho': 'LS', 'Liberia': 'LR', 'Libya': 'LY', 'Liechtenstein': 'LI', 'Lithuania': 'LT', 'Luxembourg': 'LU', 'Macao': 'MO', 'Macedonia': 'MK', 'Madagascar': 'MG', 'Malawi': 'MW', 'Malaysia': 'MY', 'Maldives': 'MV', 'Mali': 'ML', 'Malta': 'MT', 'Marshall Islands': 'MH', 'Martinique': 'MQ', 'Mauritania': 'MR', 'Mauritius': 'MU', 'Mayotte': 'YT', 'Mexico': 'MX', 'Federated States of Micronesia': 'FM', 'Moldova': 'MD', 'Monaco': 'MC', 'Mongolia': 'MN', 'Montenegro': 'ME', 'Montserrat': 'MS', 'Morocco': 'MA', 'Mozambique': 'MZ', 'Myanmar': 'MM', 'Namibia': 'NA', 'Nauru': 'NR', 'Nepal': 'NP', 'Netherlands': 'NL', 'New Caledonia': 'NC', 'New Zealand': 'NZ', 'Nicaragua': 'NI', 'Niger': 'NE', 'Nigeria': 'NG', 'Niue': 'NU', 'Norfolk Island': 'NF', 'Northern Mariana Islands': 'MP', 'Norway': 'NO', 'Oman': 'OM', 'Pakistan': 'PK', 'Palau': 'PW', 'Palestine': 'PS', 'Panama': 'PA', 'Papua New Guinea': 'PG', 'Paraguay': 'PY', 'Peru': 'PE', 'Philippines': 'PH', 'Pitcairn': 'PN', 'Poland': 'PL', 'Portugal': 'PT', 'Puerto Rico': 'PR', 'Qatar': 'QA', 'Reunion and associated islands': 'RE', 'Romania': 'RO', 'Russia': 'RU', 'Rwanda': 'RW', 'Saint Barthelemy': 'BL', 'Saint Helena': 'SH', 'Saint Kitts and Nevis': 'KN', 'Saint Lucia': 'LC', 'Saint Martin (French part)': 'MF', 'Saint Pierre and Miquelon': 'PM', 'Saint Vincent and the Grenadines': 'VC', 'Samoa': 'WS', 'San Marino': 'SM', 'Sao Tome and Principe': 'ST', 'Saudi Arabia': 'SA', 'Senegal': 'SN', 'Serbia': 'RS', 'Seychelles': 'SC', 'Sierra Leone': 'SL', 'Singapore': 'SG', 'Sint Maarten (Dutch part)': 'SX', 'Slovakia': 'SK', 'Slovenia': 'SI', 'Solomon Islands': 'SB', 'Somalia': 'SO', 'South Africa': 'ZA', 'South Georgia and South Sandwich Islands': 'GS', 'South Sudan': 'SS', 'Spain': 'ES', 'Sri Lanka': 'LK', 'Sudan': 'SD', 'Suriname': 'SR', 'Svalbard and Jan Mayen': 'SJ', 'Swaziland': 'SZ', 'Sweden': 'SE', 'Switzerland': 'CH', 'Syrian Arab Republic': 'SY', 'Taiwan': 'TW', 'Tajikistan': 'TJ', 'Tanzania': 'TZ', 'Thailand': 'TH', 'Timor-Leste': 'TL', 'Togo': 'TG', 'Tokelau': 'TK', 'Tonga': 'TO', 'Trinidad and Tobago': 'TT', 'Tunisia': 'TN', 'Turkey': 'TR', 'Turkmenistan': 'TM', 'Turks and Caicos Islands': 'TC', 'Tuvalu': 'TV', 'Uganda': 'UG', 'Ukraine': 'UA', 'United Arab Emirates': 'AE', 'United Kingdom': 'GB', 'United States of America': 'US', 'United States Minor Outlying Islands': 'UM', 'Uruguay': 'UY', 'Uzbekistan': 'UZ', 'Vanuatu': 'VU', 'Venezuela': 'VE', 'Vietnam': 'VN', 'Virgin Islands': 'VG', 'Virgin Islands of the United States': 'VI', 'Wallis and Futuna': 'WF', 'Western Sahara': 'EH', 'Yemen': 'YE', 'Zambia': 'ZM', 'Zimbabwe': 'ZW'};
+
+    let city = null;
+    let region = null;
+    let timezone = null;
+
+    if (nav != null) {
+        city = data.location?.name == null ? '?' : data.location.name;
+        region = data.location?.region == null ? '?' : data.location.region;
+        country = data.location?.country == null ? '?' : locales[data.location.country];
+        timezone = data.location?.tz_id == null ? '?' : data.location.tz_id;
+    }
+
+    if (city == null) { city = request.cf.city }
+    if (region == null) { region = request.cf.region }
+    if (country == null) { country = request.cf.country }
+    if (timezone == null) { timezone = request.cf.timezone }
+
+    let location = data.location?.name == null ? '?' : data.location.name;
+
+    let index = null;
+    if (data.current?.air_quality != null) {
+        index = data.current.air_quality['us-epa-index'];
+    }
 
 	if (api) {
 		let text = `
 {
 	"generated": {
-		"lat": "${lat}",
-		"long": "${lon}",
-		"city": "${request.cf.city}",
-		"region": "${request.cf.region}",
-		"country": "${loc}",
-		"zone": "${request.cf.timezone}"
+		"lat": "${latitude}",
+		"long": "${longitude}",
+		"city": "${city}",
+		"region": "${region}",
+		"country": "${country}",
+		"zone": "${timezone}",
+        "data": "${location}"
 	}, "weather": {
-        "condition": "${iqair.data.current?.weather.ic == null ? '?' : iqair.data.current?.weather.ic}",
-		"temperature": "${iqair.data.current?.weather.tp == null ? '?' : iqair.data.current?.weather.tp}",
-		"humidity": "${iqair.data.current?.weather.hu == null ? '?' : iqair.data.current?.weather.hu}",
-		"windspeed": "${iqair.data.current?.weather.ws == null ? '?' : iqair.data.current?.weather.ws}",
-		"winddirection": "${iqair.data.current?.weather.wd == null ? '?' : iqair.data.current?.weather.wd}",
-		"pressure": "${iqair.data.current?.weather.pr == null ? '?' : iqair.data.current?.weather.pr}"
-        "uvi": "${aqicn.data.forecast.daily.uvi == null ? '?' : aqicn.data.forecast.daily.uvi[1]?.avg}"
+        "condition": "${data.current?.condition?.text == null ? '?' : data.current.condition.text}",
+		"temperature": "${data.current?.temp_c == null ? '?' : data.current.temp_c}",
+        "feelslike": "${data.current?.feelslike_c == null ? '?' : data.current.feelslike_c}",
+		"humidity": "${data.current?.humidity == null ? '?' : data.current.humidity}",
+		"windspeed": "${windspeed == '?' ? '?' : Math.round(((windspeed / 3.6) + Number.EPSILON) * 10) / 10}",
+		"winddirection": "${data.current?.wind_degree == null ? '?' : data.current.wind_degree}",
+		"pressure": "${data.current?.pressure_mb == null ? '?' : data.current.pressure_mb}",
+        "uvi": "${data.current?.uv == null ? '?' : data.current.uv}"
 	}, "airquality": {
-		"aqi": "${aqicn.data.aqi == null ? '?' : aqicn.data.aqi == null}",
-		"pm25": "${aqicn.data.iaqi.pm25?.v == null ? '?' : aqicn.data.iaqi.pm25?.v}",
-		"pm10": "${aqicn.data.iaqi.pm10?.v == null ? '?' : aqicn.data.iaqi.pm10?.v}",
-		"o3": "${aqicn.data.iaqi.o3?.v == null ? '?' : aqicn.data.iaqi.o3?.v}",
-		"co": "${aqicn.data.iaqi.co?.v == null ? '?' : aqicn.data.iaqi.co?.v}",
-		"no2": "${aqicn.data.iaqi.no2?.v == null ? '?' : aqicn.data.iaqi.no2?.v}",
-		"so2": "${aqicn.data.iaqi.so2?.v == null ? '?' : aqicn.data.iaqi.so2?.v}"
+		"aqi": "${index == null ? '?' : index}",
+		"pm25": "${data.current?.air_quality?.pm2_5 == null ? '?' : Math.round((data.current.air_quality.pm2_5 + Number.EPSILON) * 10) / 10}",
+		"pm10": "${data.current?.air_quality?.pm10 == null ? '?' : Math.round((data.current.air_quality.pm10 + Number.EPSILON) * 10) / 10}",
+		"o3": "${data.current?.air_quality?.o3 == null ? '?' : Math.round((data.current.air_quality.o3 + Number.EPSILON) * 10) / 10}",
+		"co": "${data.current?.air_quality?.co == null ? '?' : Math.round((data.current.air_quality.co + Number.EPSILON) * 10) / 10}",
+		"no2": "${data.current?.air_quality?.no2 == null ? '?' : Math.round((data.current.air_quality.no2 + Number.EPSILON) * 10) / 10}",
+		"so2": "${data.current?.air_quality?.so2 == null ? '?' : Math.round((data.current.air_quality.so2 + Number.EPSILON) * 10) / 10}"
 	}
 }
 		`;
@@ -54,42 +82,47 @@ async function handleRequest(request) {
 			headers: { 'content-type': 'text/plain', 'status' : 200 },
 		})
 	} else {
-        let conditions = {
-            '01d': 'Clear Sky',
-            '01n': 'Clear Sky',
-            '02d': 'Few Clouds',
-            '02n': 'Few Clouds',
-            '03d': 'Scattered Clouds',
-            '04d': 'Broken Clouds',
-            '09d': 'Rain Showers',
-            '10d': 'Rain Showers',
-            '10n': 'Rain Showers',
-            '11d': 'Thunderstorms',
-            '13d': 'Snowy',
-            '50d': 'Foggy'
-        };
-
-        let cond = conditions[iqair.data.current?.weather.ic];
-        let pres = iqair.data.current?.weather.pr + ' hPa';
-        let temp = Math.round(iqair.data.current?.weather.tp) + '°C';
-        let wind = iqair.data.current?.weather.ws;
-        
-        switch(loc) {
+        let temp = null;
+        switch(country) {
             case 'US':
-                pres = `${Math.round(((iqair.data.current?.weather.pr * 0.029529983071445) + Number.EPSILON) * 100) / 100} inHg`
-                temp = `${Math.round((iqair.data.current?.weather.tp * (9 / 5)) + 32)}°F`;
-                wind = `${Math.round(((wind * 2.237) + Number.EPSILON) * 10) / 10} mph`
+                temp = data.current?.temp_f == null ? '?' : (Math.round(data.current.temp_f)) + '°';
+                break;
+
+            default:
+                temp = data.current?.temp_c == null ? '?' : (Math.round(data.current.temp_c)) + '°';
+                break;
+        }
+
+        let temperature = null;
+        switch(country) {
+            case 'US':
+                temperature = data.current?.temp_f == null ? '?' : data.current.temp_f + '°F';
+                break;
+
+            default:
+                temperature = data.current?.temp_c == null ? '?' : data.current.temp_c + '°C';
+                break;
+        }
+
+        let feelslike = null;
+        switch(country) {
+            case 'US':
+                feelslike = data.current?.feelslike_f == null ? '?' : data.current.feelslike_f + '°F';
+                break;
+
+            default:
+                feelslike = data.current?.feelslike_c == null ? '?' : data.current.feelslike_c + '°C';
+                break;
+        }
+
+        let windspeed = data.current?.wind_kph == null ? '?' : data.current.wind_kph;
+        switch(country) {
+            case 'US':
+            case 'UK':
+                windspeed = data.current?.wind_mph == null ? '?' : data.current.wind_mph + ' mph'
                 break;
 
             case 'CA':
-                pres = `${Math.round(((iqair.data.current?.weather.pr * 0.1) + Number.EPSILON) * 100) / 100} kPa`
-                wind = `${Math.round(((wind * 3.6) + Number.EPSILON) * 10) / 10} km/h`
-                break;
-
-            case 'UK':
-                wind = `${Math.round(((wind * 2.237) + Number.EPSILON) * 10) / 10} mph`
-                break;
-
             case 'IE':
             case 'DE':
             case 'PL':
@@ -106,48 +139,85 @@ async function handleRequest(request) {
             case 'JO':
             case 'IL':
             case 'AU':
-                wind = `${Math.round(((wind * 3.6) + Number.EPSILON) * 10) / 10} km/h`
+                windspeed = windspeed == '?' ? '?' : windspeed + ' km/h';
                 break;
 
-            case 'MT':
-                wind = `${Math.round(((wind * 1.94384) + Number.EPSILON) * 10) / 10} Knots`
-                break;
-
-            case 'RU':
-                pres = `${Math.round(((iqair.data.current?.weather.pr * 0.7500616827) + Number.EPSILON) * 100) / 100} Torr`
-                wind = `${wind} m/s`
-                break;
+                case 'MT':
+                    windspeed = windspeed == '?' ? '?' : (Math.round(((windspeed / 1.852) + Number.EPSILON) * 10) / 10) + 'Knots';
+                    break;
 
             case 'GR':
-                if (wind < 0.5) {wind = 'Force 0'}
-                if (wind > 0.5 && wind < 1.5) {wind = 'Force 1'}
-                if (wind > 1.5 && wind < 3.5) {wind = 'Force 2'}
-                if (wind > 3.5 && wind < 5.5) {wind = 'Force 3'}
-                if (wind > 5.5 && wind < 8) {wind = 'Force 4'}
-                if (wind > 8 && wind < 11) {wind = 'Force 5'}
-                if (wind > 11 && wind < 14) {wind = 'Force 6'}
-                if (wind > 14 && wind < 17) {wind = 'Force 7'}
-                if (wind > 17 && wind < 21) {wind = 'Force 8'}
-                if (wind > 21 && wind < 24.5) {wind = 'Force 9'}
-                if (wind > 24.5 && wind < 28.5) {wind = 'Force 10'}
-                if (wind > 28.5 && wind < 32.5) {wind = 'Force 11'}
-                if (wind > 32.5) {wind = 'Force 12'}
+                if (windspeed == '?') { windspeed = 'Force ?' }
+                if (windspeed < 2) { windspeed = 'Force 0' }
+                if (windspeed > 2 && windspeed < 5) { windspeed = 'Force 1' }
+                if (windspeed > 5 && windspeed < 11) { windspeed = 'Force 2' }
+                if (windspeed > 11 && windspeed < 19) { windspeed = 'Force 3' }
+                if (windspeed > 19 && windspeed < 28) { windspeed = 'Force 4' }
+                if (windspeed > 28 && windspeed < 38) { windspeed = 'Force 5' }
+                if (windspeed > 38 && windspeed < 49) { windspeed = 'Force 6' }
+                if (windspeed > 49 && windspeed < 61) { windspeed = 'Force 7' }
+                if (windspeed > 61 && windspeed < 74) { windspeed = 'Force 8' }
+                if (windspeed > 74 && windspeed < 88) { windspeed = 'Force 9' }
+                if (windspeed > 88 && windspeed < 102) { windspeed = 'Force 10' }
+                if (windspeed > 102 && windspeed < 117) { windspeed = 'Force 11' }
+                if (windspeed > 117) { windspeed = 'Force 12' }
                 break;
 
             default:
-                wind = `${wind} m/s`
+                windspeed = windspeed == '?' ? '?' : (Math.round(((windspeed / 3.6) + Number.EPSILON) * 10) / 10) + 'm/s';
                 break;
         }
 
-        if (iqair.status == 'fail') {
-            cond = 'Could not locate station...';
-            temp = '?';
-            wind = '?';
-            pres = '?';
+        let pressure = data.current?.pressure_mb == null ? '?' : data.current.pressure_mb;
+        switch(country) {
+            case 'US':
+                pressure = data.current?.pressure_in == null ? '?' : data.current.pressure_in + ' inHg';
+                break;
+
+            case 'CA':
+                pressure = pressure == '?' ? '?' : (pressure / 10) + ' kPa';
+                break;
+
+            case 'RU':
+                pressure = data.current?.pressure_in == null ? '?' : (Math.round(((data.current.pressure_in * 25.4) + Number.EPSILON) * 10) / 10) + ' Torr';
+                break;
+
+            default:
+                pressure =  pressure == '?' ? '?' : pressure + ' hPa';
+                break;
+        }
+
+        const epa = {0: 'Great', 1: 'Good', 2: 'Moderate', 3: 'Unhealthy For Some', 4: 'Unhealthy', 5: 'Very Unhealthy', 6: 'Hazardous'};
+
+        let icon = data.current?.condition?.icon == null ? null : data.current.condition.icon;
+        let condition = data.current?.condition?.text == null ? '?' : data.current.condition.text;
+        let humidity = data.current?.humidity == null ? '?' : data.current.humidity + '%';
+        let winddegree = data.current?.wind_degree == null ? null : data.current.wind_degree;
+        let windheading = data.current?.wind_dir == null ? null : data.current.wind_dir;
+        let winddirection = winddegree + windheading == null ? '?' : winddegree + '°' + windheading;
+        let uvi = data.current?.uv == null ? '?' : data.current.uv + ' of 10';
+        let aqi = index == null ? '?' : index + ` (${epa[index]})`;
+        let pm25 = data.current?.air_quality?.pm2_5 == null ? '?' : (Math.round((data.current.air_quality.pm2_5 + Number.EPSILON) * 10) / 10) + ' μg/m³';
+        let pm10 = data.current?.air_quality?.pm10 == null ? '?' : (Math.round((data.current.air_quality.pm10 + Number.EPSILON) * 10) / 10) + ' μg/m³';
+        let o3 = data.current?.air_quality?.o3 == null ? '?' : (Math.round((data.current.air_quality.o3 + Number.EPSILON) * 10) / 10) + ' μg/m³';
+        let co = data.current?.air_quality?.co == null ? '?' : (Math.round((data.current.air_quality.co + Number.EPSILON) * 10) / 10) + ' μg/m³';
+        let no2 = data.current?.air_quality?.no2 == null ? '?' : (Math.round((data.current.air_quality.no2 + Number.EPSILON) * 10) / 10) + ' μg/m³';
+        let so2 = data.current?.air_quality?.so2 == null ? '?' : (Math.round((data.current.air_quality.so2 + Number.EPSILON) * 10) / 10) + ' μg/m³';
+        
+        let error = '';
+        if (data.error != null) {
+            let ecode = data.error.code == null ? '0' : data.error.code;
+            let emesg = data.error.message == null ? 'Unknown error!' : data.error.message;
+            
+            error = `
+                <script>
+                    window.alert('Weather Data Error: ${ecode}: ${emesg}');
+                </script>
+            `;
         }
 
 		let html = `
-		    <!DOCTYPE html>
+            <!DOCTYPE html>
             <html lang='en'>
                 <head>
                     <title>KPNC Forecaster</title>
@@ -170,51 +240,59 @@ async function handleRequest(request) {
                             <a href='https://www.kpnc.io'>
                                 <img src='https://content.kpnc.io/img/kpnc/logodark.webp' alt='~KPNC~'>
                             </a>
-
-                            <small>2022 &copy; KPNC Technology // Forecaster: <a href='https://github.com/kpncio/forecaster' target='_blank'>GitHub</a></small>
+            
+                            <small>2022 &copy; KPNC Technology // Forecaster: <a href='https://github.com/kpncio/forecaster' target='_blank'>GitHub</a></small><br>
+                            <small>External geolocation from: <a href='https://www.maxmind.com/en/home' target='_blank'>Maxmind</a></small><br>
+                            <small>Weather data from: <a href='https://www.weatherapi.com/' target='_blank'>WeatherAPI</a></small>
                         </header>
-
+            
                         <header>
                             <div class='weather'>
-                                <h1><img src='https://content.kpnc.io/img/kpnc/weather/${iqair.data.current?.weather.ic}.webp' alt='🌟'> ${temp.slice(0, -1)}</h1>
+                                <h1><img src='https:${icon}' alt='🌟'> ${temp}</h1>
                             </div>
                             
                             <h2 id='date'>-------, ------- ----</h2>
                             <h2 id='time'>--:--:-- --</h2>
+            
+                            <small id="hint">*Browser Location Data*</small>
                         </header>
-
+            
                         <div class='container'>
                             <p><strong>Generated Data:</strong></p><br>
                             <table>
                                 <tbody>
                                     <tr>
                                         <td><p>&rtrif; Latitude</p></td>
-                                        <td><input type='text' class='data' value='${lat}'/></td>
+                                        <td><input type='text' class='data' value='${latitude}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Longitude</p></td>
-                                        <td><input type='text' class='data' value='${lon}'/></td>
+                                        <td><input type='text' class='data' value='${longitude}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; City</p></td>
-                                        <td><input type='text' class='data' value='${request.cf.city}'/></td>
+                                        <td><input type='text' class='data' value='${city}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Region</p></td>
-                                        <td><input type='text' class='data' value='${request.cf.region}'/></td>
+                                        <td><input type='text' class='data' value='${region}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Country</p></td>
-                                        <td><input type='text' class='data' value='${loc}'/></td>
+                                        <td><input type='text' class='data' value='${country}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Timezone</p></td>
-                                        <td><input type='text' class='data' value='${request.cf.timezone}'/></td>
+                                        <td><input type='text' class='data' value='${timezone}'/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p>&rtrif; Data Point</p></td>
+                                        <td><input type='text' class='data' value='${location}'/></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-
+            
                         <br>
                         <div class='container'>
                             <p><strong>Weather Data:</strong></p><br>
@@ -222,87 +300,86 @@ async function handleRequest(request) {
                                 <tbody>
                                     <tr>
                                         <td><p>&rtrif; Condition</p></td>
-                                        <td><input type='text' class='data' value='${cond}'/></td>
+                                        <td><input type='text' class='data' value='${condition}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Temperature</p></td>
-                                        <td><input type='text' class='data' value='${temp}'/></td>
+                                        <td><input type='text' class='data' value='${temperature}'/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p>&rtrif; Feels Like</p></td>
+                                        <td><input type='text' class='data' value='${feelslike}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Humidity</p></td>
-                                        <td><input type='text' class='data' value='${iqair.data.current?.weather.hu == null ? '?' : iqair.data.current?.weather.hu + '%'}'/></td>
+                                        <td><input type='text' class='data' value='${humidity}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Wind Speed</p></td>
-                                        <td><input type='text' class='data' value='${wind}'/></td>
+                                        <td><input type='text' class='data' value='${windspeed}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Wind Direction</p></td>
-                                        <td><input type='text' class='data' value='${iqair.data.current?.weather.wd == null ? '?' : iqair.data.current?.weather.wd + '°'}'/></td>
+                                        <td><input type='text' class='data' value='${winddirection}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Pressure</p></td>
-                                        <td><input type='text' class='data' value='${pres}'/></td>
+                                        <td><input type='text' class='data' value='${pressure}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; UVI</p></td>
-                                        <td><input type='text' class='data' value='${aqicn.data.forecast.daily.uvi == null ? '?' : aqicn.data.forecast.daily.uvi[1]?.avg} of 10'/></td>
+                                        <td><input type='text' class='data' value='${uvi}'/></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-
+            
                         <br>
                         <div class='container'>
                             <p><strong>Air Quality Data:</strong></p><br>
-                            <small style="margin-left: 10px;">*Values on AQI Scale...</small>
                             <table>
                                 <tbody>
                                     <tr>
                                         <td><p>&rtrif; AQI</p></td>
-                                        <td><input type='text' class='data' value='${aqicn.data.aqi == null ? '?' : aqicn.data.aqi}'/></td>
+                                        <td><input type='text' class='data' value='${aqi}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; PM 2.5</p></td>
-                                        <td><input type='text' class='data' value='${aqicn.data.iaqi.pm25?.v == null ? '?' : aqicn.data.iaqi.pm25?.v}'/></td>
+                                        <td><input type='text' class='data' value='${pm25}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; PM 10</p></td>
-                                        <td><input type='text' class='data' value='${aqicn.data.iaqi.pm10?.v == null ? '?' : aqicn.data.iaqi.pm10?.v}'/></td>
+                                        <td><input type='text' class='data' value='${pm10}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Ozone</p></td>
-                                        <td><input type='text' class='data' value='${aqicn.data.iaqi.o3?.v == null ? '?' : aqicn.data.iaqi.o3?.v}'/></td>
+                                        <td><input type='text' class='data' value='${o3}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Carbon Monoxide</p></td>
-                                        <td><input type='text' class='data' value='${aqicn.data.iaqi.co?.v == null ? '?' : aqicn.data.iaqi.co?.v}'/></td>
+                                        <td><input type='text' class='data' value='${co}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Nitrogen Dioxide</p></td>
-                                        <td><input type='text' class='data' value='${aqicn.data.iaqi.no2?.v == null ? '?' : aqicn.data.iaqi.no2?.v}'/></td>
+                                        <td><input type='text' class='data' value='${no2}'/></td>
                                     </tr>
                                     <tr>
                                         <td><p>&rtrif; Sulfur Dioxide</p></td>
-                                        <td><input type='text' class='data' value='${aqicn.data.iaqi.so2?.v == null ? '?' : aqicn.data.iaqi.so2?.v}'/></td>
+                                        <td><input type='text' class='data' value='${so2}'/></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-
+            
                         <br>
                         <div class='container'>
                             <p><strong>Map Visualization:</strong></p><br>
                             <div id='map' style='height: 250px; font-size: 11px; text-align: center;'>*Map loading...</div>
                         </div>
-
-                        <div class='container'>
-                            <small>*If client geolocation is blocked, locational data is gathered via GeoIP...</small>
-                        </div>
                     </main>
-
+            
                     <script>
-                        var map = L.map('map').setView([${lat}, ${lon}], 11);
+                        var map = L.map('map').setView([${latitude}, ${longitude}], 11);
                                 
                         var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                             maxZoom: 18,
@@ -313,14 +390,14 @@ async function handleRequest(request) {
                             accessToken: 'pk.eyJ1IjoiYWxiaWU2NTQ0IiwiYSI6ImNsMjV1YmdmMTJkcTMza3BkZTdmbnY1bTcifQ.YpT_p-H1WckYccV8_HoLHg'
                         }).addTo(map);
                     </script>
-
+            
                     <video playsinline autoplay muted loop src='https://content.kpnc.io/vid/suburb10.mp4' preload='metadata'></video>
                 </body>
-
+            
                 <script>
                     let days = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
                     let months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
-
+            
                     function ordinal(i) {
                         var j = i % 10,
                             k = i % 100;
@@ -335,26 +412,46 @@ async function handleRequest(request) {
                         }
                         return i + "th";
                     }
-
+            
                     function set(now) {
                         document.getElementById('date').innerHTML = days[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + ordinal(now.getDate());
                         document.getElementById('time').innerHTML = now.toLocaleTimeString()
                     }
-
+            
                     setInterval(() => set(new Date()), 1000);
-
+            
                     let date = new Date();
                     let time = ((((date.getHours() * 60) + date.getMinutes()) * 60) + date.getSeconds()) * 0.1;
-
+            
                     document.querySelector('video').addEventListener('loadeddata', function() {
                         this.playbackRate = 0.1;
                         this.currentTime = time;
                     }, false);
-
+            
                     set(new Date());
-
+            
                     setTimeout(() => window.location.href = window.location.href, 3600000);
                 </script>
+            
+                <script>
+                    if('geolocation' in navigator) {
+                        if (!new URLSearchParams(window.location.search).has('nav')) {
+                            navigator.geolocation.getCurrentPosition((position) => {
+                                var url = window.location.href;
+                                if (url.indexOf('?') > -1){
+                                    url += '&nav=' + position.coords.latitude + ',' + position.coords.longitude;
+                                } else {
+                                    url += '?nav=' + position.coords.latitude + ',' + position.coords.longitude;
+                                }
+                                window.location.href = url;
+                            }, document.getElementById('hint').remove());
+                        }
+                    } else {
+                        document.getElementById('hint').remove();
+                    }
+                </script>
+
+                ${error}
             </html>
 		`;
 

@@ -22,16 +22,20 @@
                     <img src='https://content.kpnc.io/img/kpnc/logodark.webp' alt='~KPNC~'>
                 </a>
 
-                <small>2022 &copy; KPNC Technology // Forecaster: <a href='https://github.com/kpncio/forecaster' target='_blank'>GitHub</a></small>
+                <small>2022 &copy; KPNC Technology // Forecaster: <a href='https://github.com/kpncio/forecaster' target='_blank'>GitHub</a></small><br>
+                <small>External geolocation from: <a href='https://www.maxmind.com/en/home' target='_blank'>Maxmind</a></small><br>
+                <small>Weather data from: <a href='https://www.weatherapi.com/' target='_blank'>WeatherAPI</a></small>
             </header>
 
             <header>
                 <div class='weather'>
-                    <h1><img src='https://content.kpnc.io/img/kpnc/weather/${iqair.data.current?.weather.ic}.webp' alt='🌟'> ${temp.slice(0, -1)}</h1>
+                    <h1><img src='https:${icon}' alt='🌟'> ${temp}</h1>
                 </div>
                 
                 <h2 id='date'>-------, ------- ----</h2>
                 <h2 id='time'>--:--:-- --</h2>
+
+                <small id="hint">*Browser Location Data*</small>
             </header>
 
             <div class='container'>
@@ -40,27 +44,31 @@
                     <tbody>
                         <tr>
                             <td><p>&rtrif; Latitude</p></td>
-                            <td><input type='text' class='data' value='${lat}'/></td>
+                            <td><input type='text' class='data' value='${latitude}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Longitude</p></td>
-                            <td><input type='text' class='data' value='${lon}'/></td>
+                            <td><input type='text' class='data' value='${longitude}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; City</p></td>
-                            <td><input type='text' class='data' value='${request.cf.city}'/></td>
+                            <td><input type='text' class='data' value='${city}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Region</p></td>
-                            <td><input type='text' class='data' value='${request.cf.region}'/></td>
+                            <td><input type='text' class='data' value='${region}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Country</p></td>
-                            <td><input type='text' class='data' value='${loc}'/></td>
+                            <td><input type='text' class='data' value='${country}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Timezone</p></td>
-                            <td><input type='text' class='data' value='${request.cf.timezone}'/></td>
+                            <td><input type='text' class='data' value='${timezone}'/></td>
+                        </tr>
+                        <tr>
+                            <td><p>&rtrif; Data Point</p></td>
+                            <td><input type='text' class='data' value='${location}'/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -73,31 +81,35 @@
                     <tbody>
                         <tr>
                             <td><p>&rtrif; Condition</p></td>
-                            <td><input type='text' class='data' value='${cond}'/></td>
+                            <td><input type='text' class='data' value='${condition}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Temperature</p></td>
-                            <td><input type='text' class='data' value='${temp}'/></td>
+                            <td><input type='text' class='data' value='${temperature}'/></td>
+                        </tr>
+                        <tr>
+                            <td><p>&rtrif; Feels Like</p></td>
+                            <td><input type='text' class='data' value='${feelslike}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Humidity</p></td>
-                            <td><input type='text' class='data' value='${iqair.data.current?.weather.hu == null ? '?' : iqair.data.current?.weather.hu + '%'}'/></td>
+                            <td><input type='text' class='data' value='${humidity}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Wind Speed</p></td>
-                            <td><input type='text' class='data' value='${wind}'/></td>
+                            <td><input type='text' class='data' value='${windspeed}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Wind Direction</p></td>
-                            <td><input type='text' class='data' value='${iqair.data.current?.weather.wd == null ? '?' : iqair.data.current?.weather.wd + '°'}'/></td>
+                            <td><input type='text' class='data' value='${winddirection}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Pressure</p></td>
-                            <td><input type='text' class='data' value='${pres}'/></td>
+                            <td><input type='text' class='data' value='${pressure}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; UVI</p></td>
-                            <td><input type='text' class='data' value='${aqicn.data.forecast.daily.uvi == null ? '?' : aqicn.data.forecast.daily.uvi[1]?.avg} of 10'/></td>
+                            <td><input type='text' class='data' value='${uvi}'/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -106,36 +118,35 @@
             <br>
             <div class='container'>
                 <p><strong>Air Quality Data:</strong></p><br>
-                <small style="margin-left: 10px;">*Values on AQI Scale...</small>
                 <table>
                     <tbody>
                         <tr>
                             <td><p>&rtrif; AQI</p></td>
-                            <td><input type='text' class='data' value='${aqicn.data.aqi == null ? '?' : aqicn.data.aqi}'/></td>
+                            <td><input type='text' class='data' value='${aqi}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; PM 2.5</p></td>
-                            <td><input type='text' class='data' value='${aqicn.data.iaqi.pm25?.v == null ? '?' : aqicn.data.iaqi.pm25?.v}'/></td>
+                            <td><input type='text' class='data' value='${pm25}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; PM 10</p></td>
-                            <td><input type='text' class='data' value='${aqicn.data.iaqi.pm10?.v == null ? '?' : aqicn.data.iaqi.pm10?.v}'/></td>
+                            <td><input type='text' class='data' value='${pm10}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Ozone</p></td>
-                            <td><input type='text' class='data' value='${aqicn.data.iaqi.o3?.v == null ? '?' : aqicn.data.iaqi.o3?.v}'/></td>
+                            <td><input type='text' class='data' value='${o3}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Carbon Monoxide</p></td>
-                            <td><input type='text' class='data' value='${aqicn.data.iaqi.co?.v == null ? '?' : aqicn.data.iaqi.co?.v}'/></td>
+                            <td><input type='text' class='data' value='${co}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Nitrogen Dioxide</p></td>
-                            <td><input type='text' class='data' value='${aqicn.data.iaqi.no2?.v == null ? '?' : aqicn.data.iaqi.no2?.v}'/></td>
+                            <td><input type='text' class='data' value='${no2}'/></td>
                         </tr>
                         <tr>
                             <td><p>&rtrif; Sulfur Dioxide</p></td>
-                            <td><input type='text' class='data' value='${aqicn.data.iaqi.so2?.v == null ? '?' : aqicn.data.iaqi.so2?.v}'/></td>
+                            <td><input type='text' class='data' value='${so2}'/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -146,14 +157,10 @@
                 <p><strong>Map Visualization:</strong></p><br>
                 <div id='map' style='height: 250px; font-size: 11px; text-align: center;'>*Map loading...</div>
             </div>
-
-            <div class='container'>
-                <small>*If client geolocation is blocked, locational data is gathered via GeoIP...</small>
-            </div>
         </main>
 
         <script>
-            var map = L.map('map').setView([${lat}, ${lon}], 11);
+            var map = L.map('map').setView([${latitude}, ${longitude}], 11);
                     
             var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                 maxZoom: 18,
@@ -206,4 +213,24 @@
 
         setTimeout(() => window.location.href = window.location.href, 3600000);
     </script>
+
+    <script>
+        if('geolocation' in navigator) {
+            if (!new URLSearchParams(window.location.search).has('nav')) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    var url = window.location.href;
+                    if (url.indexOf('?') > -1){
+                        url += '&nav=' + position.coords.latitude + ',' + position.coords.longitude;
+                    } else {
+                        url += '?nav=' + position.coords.latitude + ',' + position.coords.longitude;
+                    }
+                    window.location.href = url;
+                }, document.getElementById('hint').remove());
+            }
+        } else {
+            document.getElementById('hint').remove();
+        }
+    </script>
+
+    ${error}
 </html>
