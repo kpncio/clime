@@ -14,7 +14,7 @@ async function handleRequest(request) {
     if (latitude == null || longitude == null) { latitude = request.cf.latitude; longitude = request.cf.longitude }
 
 	const url = await fetch(
-        `https://api.weatherapi.com/v1/current.json?key=4ed5f0607b694dadbcf84326221807&q=${latitude},${longitude}&aqi=yes`, {
+        `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${latitude},${longitude}&aqi=yes`, {
             headers: {
                 'content-type': 'application/json;charset=UTF-8',
             },
@@ -194,7 +194,8 @@ async function handleRequest(request) {
         let humidity = data.current?.humidity == null ? '?' : data.current.humidity + '%';
         let winddegree = data.current?.wind_degree == null ? null : data.current.wind_degree;
         let windheading = data.current?.wind_dir == null ? null : data.current.wind_dir;
-        let winddirection = winddegree + windheading == null ? '?' : winddegree + '°' + windheading;
+        let winddirection = winddegree == null ? '?' : winddegree + '°';
+        winddirection += windheading == null ? '' : windheading;
         let uvi = data.current?.uv == null ? '?' : data.current.uv + ' of 10';
         let aqi = index == null ? '?' : index + ` (${epa[index]})`;
         let pm25 = data.current?.air_quality?.pm2_5 == null ? '?' : (Math.round((data.current.air_quality.pm2_5 + Number.EPSILON) * 10) / 10) + ' μg/m³';
