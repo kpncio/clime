@@ -11,13 +11,11 @@ body {
 	margin: 0;
     padding: 20px 0;
     background: #1472FC;
-    background: #343332;
-    background-attachment: fixed;
+    /* background: #343332; */
     font-family: "Roboto Mono", monospace;
-    /* background: -moz-linear-gradient(165deg, rgba(20,252,195,1) 0%, rgba(136,20,252,1) 100%);
-	background: -webkit-linear-gradient(165deg, rgba(20,252,195,1) 0%, rgba(136,20,252,1) 100%);
 	background: linear-gradient(165deg, rgba(20,252,195,1) 0%, rgba(136,20,252,1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#14fcc3",endColorstr="#8814fc",GradientType=1); */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#14fcc3",endColorstr="#8814fc",GradientType=1);
+    background-attachment: fixed;
 }
 
 video {
@@ -36,8 +34,8 @@ main {
     margin: auto;
     color: white;
     border-radius: 20px;
+    background-color: #343332;
     width: clamp(350px, 80vw, 500px);
-    background-color: rgba(0,0,0,0.5);
 }
 
 header {

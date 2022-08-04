@@ -234,9 +234,9 @@ async function handleRequest(request) {
                     <meta name='viewport' content='width=device-width, height=device-height, initial-scale=1.0'>
                     <meta http-equiv='X-UA-Compatible' content='ie=edge'>
                     <link href='https://content.kpnc.io/' rel='preconnect'>
+                    <link href='https://content.kpnc.io/img/kpnc/forecaster.png' rel='icon'>
                     <link href='https://content.kpnc.io/css/forecaster.css' rel='stylesheet'>
                     <link href='https://content.kpnc.io/css/roboto-mono.css' rel='stylesheet'>
-                    <link href='https://content.kpnc.io/img/kpnc/forecaster.png' rel='icon'>
                     <link href='https://content.kpnc.io/lib/leaflet/leaflet.css' rel='stylesheet'>
                     <script src='https://content.kpnc.io/lib/leaflet/leaflet.js'></script>
                 </head>
@@ -397,7 +397,7 @@ async function handleRequest(request) {
                         }).addTo(map);
                     </script>
             
-                    <video playsinline autoplay muted loop src='https://content.kpnc.io/vid/suburb10.mp4' preload='metadata'></video>
+                    <!-- <video playsinline autoplay muted loop src='https://content.kpnc.io/vid/suburb10.mp4' preload='metadata'></video> -->
                 </body>
             
                 <script>
@@ -456,7 +456,7 @@ async function handleRequest(request) {
                         document.getElementById('hint').remove();
                     }
                 </script>
-
+            
                 ${error}
             </html>
 		`;
