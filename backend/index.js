@@ -46,16 +46,6 @@ async function handleRequest(request) {
         index = data.current.air_quality['us-epa-index'];
     }
 
-    let temp = null;
-    switch(country) {
-        case 'US':
-            temp = data.current?.temp_f == null ? '?' : (Math.round(data.current.temp_f)) + '°';
-            break;
-        default:
-            temp = data.current?.temp_c == null ? '?' : (Math.round(data.current.temp_c)) + '°';
-            break;
-    }
-
     let temperature = null;
     switch(country) {
         case 'US':
@@ -143,7 +133,7 @@ async function handleRequest(request) {
 
     const epa = {0: 'Great', 1: 'Good', 2: 'Moderate', 3: 'Unhealthy For Some', 4: 'Unhealthy', 5: 'Very Unhealthy', 6: 'Hazardous'};
 
-    let icon = data.current?.condition?.icon == null ? null : data.current.condition.icon;
+    let icon = data.current?.condition?.icon == null ? '000' : data.current.condition.icon.slice(39, 42);
     let condition = data.current?.condition?.text == null ? '?' : data.current.condition.text;
     let humidity = data.current?.humidity == null ? '?' : data.current.humidity + '%';
     let winddegree = data.current?.wind_degree == null ? null : data.current.wind_degree;
@@ -169,6 +159,7 @@ async function handleRequest(request) {
             "zone": timezone,
             "data": location
         }, "weather": {
+            "icon": icon,
             "condition": condition,
             "temperature": temperature,
             "feelslike": feelslike,
