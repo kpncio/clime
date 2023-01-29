@@ -1,44 +1,102 @@
 import { FetchService } from 'src/app/services/fetch.service';
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit, ɵɵsetComponentScope } from '@angular/core';
 import { Router } from '@angular/router';
+
+export interface IForecast {
+  location: {
+    lat: string;
+    long: string;
+    city: string;
+    region: string;
+    country: string;
+    zone: string;
+    data: string;
+    goes: boolean;
+  };
+  weather: {
+    icon: string;
+    condition: string;
+    temperature: string;
+    feelslike: string;
+    humidity: string;
+    windspeed: string;
+    winddirection: string;
+    pressure: string;
+    uvi: string;
+  };
+  airquality: {
+    aqi: string;
+    pm25: string;
+    pm10: string;
+    o3: string;
+    co: string;
+    no2: string;
+    so2: string;
+  };
+  astronomy: {
+    sunrise: string;
+    sunset: string;
+    moonrise: string;
+    moonset: string;
+    phase: string;
+    illumination: string;
+  };
+}
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  response: IForecast | null = null;
+  astronomy: boolean = false;
+  satellite: boolean = false;
   loading: boolean = false;
   success: boolean = false;
   message: string = '';
-  url: string = '';
+  q: string = '';
 
   constructor(private router: Router, private ngZone: NgZone, private fetch: FetchService) {}
+
+  ngOnInit(): void {
+    this.retrieval(`https://app.kpnc.io/forecaster/api/`);
+  }
 
   routerLink(route: any[]): void {
     this.ngZone.run(() => this.router.navigate(route)).then();
   }
 
   changed(control: any): void {
-    this.url = control.value;
+    this.q = control.value;
   }
 
   clicked(): void {
+    if(this.q != '') {
+      this.retrieval(`https://app.kpnc.io/forecaster/api/?nav=${this.q}`);
+    } else {
+      this.retrieval(`https://app.kpnc.io/forecaster/api/`);
+    }
+  }
+
+  retrieval(url: string): void {
+    let time = performance.now()
+
+    this.response = null;
+
     this.loading = true;
     this.message = '';
 
-    interface shorten {
-      success: boolean;
-      message: string;
-    }
+    this.fetch.request(url).subscribe((response: IForecast) => {
+        this.response = response;
 
-    const url = 'https://app.kpnc.io/shorten/' + encodeURIComponent(this.url);
-
-    this.fetch.request(url).subscribe((response: shorten) => {
+        this.loading = false;
+        this.success = true;
+        this.message = `Data retrieved successfully (${Math.round(performance.now() - time)}ms)...`
+    }, _ => {
       this.loading = false;
-
-      this.success = response.success;
-      this.message = response.message;
+      this.success = false;
+      this.message = 'Error: Unknown error, try again...'
     });
   }
 }

@@ -7,10 +7,10 @@
 
 <main>
   <div class="container">
-    <h2>Information on Shortener:</h2>
+    <h2>Information on Forecaster:</h2>
     <h3>⤷ Latest info in the repository...</h3>
 
-    <div class="text" style="margin-top: 0;">
+    <div class="text" style="margin-top: 0;" id="info-license">
       <h2>Software License</h2>
       <p><strong>MIT License</strong></p>
       <p><strong>Copyright (c) 2022 KPNC Technology</strong></p>
@@ -24,33 +24,58 @@
         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, SOFTWARE.
       </p>
       <p>
-        For the latest information see <a href="https://github.com/kpncio/shortener/blob/main/LICENSE" target="_blank">LICENSE</a>...
+        For the latest information see <a href="https://github.com/kpncio/forecaster/blob/main/LICENSE" target="_blank">LICENSE</a>...
       </p>
     </div>
 
-    <div class="text">
+    <div class="text" id="info-cookies">
       <h2>Cookies & Sessions</h2>
       <p><strong>Cloudflare Services</strong></p>
       <p>
-        Shortener does not read, write, or interact with any cookies, local sessions, or local storage; however, KPNC Technology uses Cloudflare services to provide users with the best experience and to protect our own infrastructure. Cloudflare sits in between your client and our origin servers and may read, write, or interact with their own cookies, local sessions, or local storage for a variety of reasons.
+        Forecaster does not read, write, or interact with any cookies, local sessions, or local storage; however, KPNC Technology uses Cloudflare services to provide users with the best experience and to protect our own infrastructure. Cloudflare sits in between your client and our origin servers and may read, write, or interact with their own cookies, local sessions, or local storage for a variety of reasons.
       </p>
       <p>
         For more information see <a href="https://www.cloudflare.com/privacypolicy/" target="_blank">Cloudflare's Privacy Policy</a>...
       </p>
     </div>
 
-    <div class="text">
+    <div class="text" id="info-technologies">
       <h2>Technologies</h2>
-      <p><strong>Cloudflare Workers/KV, Angular</strong></p>
+      <p><strong>Cloudflare Workers, WatherAPI, Angular</strong></p>
       <p>
-        The backend of Shortener uses the Cloudflare Workers ecosystem to allow for the low latency creation and usage of shortened URLs. The frontend of Shortener uses Google's Angular framework for a powerful and performant experience.
+        The backend of Forecaster uses Cloudflare Workers with the WeatherAPI for low latency requests to current weather information. The frontend of Forecaster uses Google's Angular framework for a powerful and performant experience.
       </p>
       <p>
-        See more information at <a href="https://angular.io/" target="_blank">Angular</a> and <a href="https://workers.cloudflare.com/" target="_blank">Workers</a>..
+        See more information at <a href="https://angular.io/" target="_blank">Angular</a>, <a href="https://www.weatherapi.com/" target="_blank">WeatherAPI</a>, and <a href="https://workers.cloudflare.com/" target="_blank">Workers</a>..
       </p>
     </div>
 
-    <div class="text">
+    <div class="text" id="info-maps">
+      <h2>Map Visualization</h2>
+      <p><strong>Leaflet, Mapbox, OpenStreetMap</strong></p>
+      <p>
+        KPNC Forecaster uses a map suit including Leaflet for client-side map rendering, Mapbox for terrain tiles, and OpenStreetMap for street information.
+      </p>
+      <p>
+        See more information at <a href="https://leafletjs.com/" target="_blank">Leaflet</a>, <a href="https://www.mapbox.com/" target="_blank">Mapbox</a>,  and <a href="https://www.openstreetmap.org/about" target="_blank">OpenStreetMap</a>..
+      </p>
+    </div>
+
+    <div class="text" id="info-search">
+      <h2>Search Usage</h2>
+      <p><strong>WeatherAPI</strong></p>
+      <p>
+        KPNC Forecaster provides a custom query input so that users may retrieve forecasts for any city of their choosing. Here are a few query examples and their results:
+      </p>
+      <p>
+        "Birmingham" &rArr; Birmingham, UK <br> "Birmingham, AL" &rArr; Birmingham, AL, US <br> "42.546,-83.212" &rArr; Birmingham, MI, US
+      </p>
+      <p>
+        See more information at <a href="http://www.weatherapi.com/docs/#intro-request" target="_blank">WeatherAPI Docs</a>...
+      </p>
+    </div>
+
+    <div class="text" id="info-contact">
       <h2>Contact Information</h2>
       <p>
         Want to report a bug, contribute code, request a feature, or contact KPNC Technology?

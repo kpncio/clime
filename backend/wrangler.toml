@@ -1,3 +1,5 @@
 name = "forecaster"
 main = "index.js"
 compatibility_date = "2023-01-24"
+
+# WEATHER_API_KEY is a secret for the WeatherAPI key...duh ;)

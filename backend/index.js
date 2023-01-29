@@ -5,20 +5,38 @@ async function handleRequest(request) {
 	const { searchParams } = new URL(request.url);
     let nav = searchParams.get('nav');
 
-    let latitude = null;
-    let longitude = null;
+    let latitude = String(request.cf.latitude);
+    let longitude = String(request.cf.longitude);
+    let query = latitude + ',' + longitude;
 
-    if (nav != null) { latitude = nav.split(',')[0]; longitude = nav.split(',')[1] }
+    if (nav != null) {
+        if (!/[a-zA-Z]/g.test(nav)) {
+            latitude = nav.split(',')[0]; longitude = nav.split(',')[1];
+        } else {
+            latitude = null; longitude = null;
+        }
 
-    if (latitude == null || longitude == null) { latitude = request.cf.latitude; longitude = request.cf.longitude }
+        query = nav;
+    }
 
 	const url = await fetch(
-        `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${latitude},${longitude}&aqi=yes`, {
+        `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${query}&aqi=yes`, {
             headers: {
                 'content-type': 'application/json; charset=UTF-8',
             },
         });
 	const data = await url.json();
+
+    const urltoo = await fetch(
+        `https://api.weatherapi.com/v1/astronomy.json?key=${WEATHER_API_KEY}&q=${query}`, {
+            headers: {
+                'content-type': 'application/json; charset=UTF-8',
+            },
+        });
+	const datatoo = await urltoo.json();
+
+    if (latitude == null) { latitude = String(data.location?.lat) }
+    if (longitude == null) { longitude = String(data.location?.lon) }
 
     const locales = { 'Afghanistan': 'AF', 'Aland Islands': 'AX', 'Albania': 'AL', 'Algeria': 'DZ', 'American Samoa': 'AS', 'Andorra': 'AD', 'Angola': 'AO', 'Anguilla': 'AI', 'Antarctica': 'AQ', 'Antigua and Barbuda': 'AG', 'Argentina': 'AR', 'Armenia': 'AM', 'Aruba': 'AW', 'Australia': 'AU', 'Austria': 'AT', 'Azerbaijan': 'AZ', 'Bahamas': 'BS', 'Bahrain': 'BH', 'Bangladesh': 'BD', 'Barbados': 'BB', 'Belarus': 'BY', 'Belgium': 'BE', 'Belize': 'BZ', 'Benin': 'BJ', 'Bermuda': 'BM', 'Bhutan': 'BT', 'Bolivia': 'BO', 'Netherlands Antilles': 'BQ', 'Bosnia and Herzegovina': 'BA', 'Botswana': 'BW', 'Bouvet Island': 'BV', 'Brazil': 'BR', 'British Indian Ocean Territory': 'IO', 'Brunei Darussalam': 'BN', 'Bulgaria': 'BG', 'Burkina Faso': 'BF', 'Burundi': 'BI', 'Cambodia': 'KH', 'Cameroon': 'CM', 'Canada': 'CA', 'Cape Verde': 'CV', 'Cayman Islands': 'KY', 'Central African Republic': 'CF', 'Chad': 'TD', 'Chile': 'CL', 'China': 'CN', 'Christmas Island': 'CX', 'Cocos (Keeling) Islands': 'CC', 'Colombia': 'CO', 'Comoros': 'KM', 'Congo': 'CG', 'Democratic Republic of Congo': 'CD', 'Cook Islands': 'CK', 'Costa Rica': 'CR', 'Cote d\'Ivoire': 'CI', 'Croatia': 'HR', 'Cuba': 'CU', 'Curacao': 'CW', 'Cyprus': 'CY', 'Czech Republic': 'CZ', 'Denmark': 'DK', 'Djibouti': 'DJ', 'Dominica': 'DM', 'Dominican Republic': 'DO', 'Ecuador': 'EC', 'Egypt': 'EG', 'El Salvador': 'SV', 'Equatorial Guinea': 'GQ', 'Eritrea': 'ER', 'Estonia': 'EE', 'Ethiopia': 'ET', 'Falkland Islands': 'FK', 'Faroe Islands': 'FO', 'Fiji': 'FJ', 'Finland': 'FI', 'France': 'FR', 'French Guiana': 'GF', 'French Polynesia': 'PF', 'French Southern Territories': 'TF', 'Gabon': 'GA', 'Gambia': 'GM', 'Georgia': 'GE', 'Germany': 'DE', 'Ghana': 'GH', 'Gibraltar': 'GI', 'Greece': 'GR', 'Greenland': 'GL', 'Grenada': 'GD', 'Guadeloupe': 'GP', 'Guam': 'GU', 'Guatemala': 'GT', 'Guernsey': 'GG', 'Guinea': 'GN', 'Guinea-Bissau': 'GW', 'Guyana': 'GY', 'Haiti': 'HT', 'Heard Island and McDonald Islands': 'HM', 'Vatican City': 'VA', 'Honduras': 'HN', 'Hong Kong': 'HK', 'Hungary': 'HU', 'Iceland': 'IS', 'India': 'IN', 'Indonesia': 'ID', 'Iran': 'IR', 'Iraq': 'IQ', 'Ireland': 'IE', 'Isle of Man': 'IM', 'Israel': 'IL', 'Italy': 'IT', 'Jamaica': 'JM', 'Japan': 'JP', 'Jersey': 'JE', 'Jordan': 'JO', 'Kazakhstan': 'KZ', 'Kenya': 'KE', 'Kiribati': 'KI', 'North Korea': 'KP', 'South Korea': 'KR', 'Kuwait': 'KW', 'Kyrgyzstan': 'KG', 'Lao People\'s Democratic Republic': 'LA', 'Latvia': 'LV', 'Lebanon': 'LB', 'Lesotho': 'LS', 'Liberia': 'LR', 'Libya': 'LY', 'Liechtenstein': 'LI', 'Lithuania': 'LT', 'Luxembourg': 'LU', 'Macao': 'MO', 'Macedonia': 'MK', 'Madagascar': 'MG', 'Malawi': 'MW', 'Malaysia': 'MY', 'Maldives': 'MV', 'Mali': 'ML', 'Malta': 'MT', 'Marshall Islands': 'MH', 'Martinique': 'MQ', 'Mauritania': 'MR', 'Mauritius': 'MU', 'Mayotte': 'YT', 'Mexico': 'MX', 'Federated States of Micronesia': 'FM', 'Moldova': 'MD', 'Monaco': 'MC', 'Mongolia': 'MN', 'Montenegro': 'ME', 'Montserrat': 'MS', 'Morocco': 'MA', 'Mozambique': 'MZ', 'Myanmar': 'MM', 'Namibia': 'NA', 'Nauru': 'NR', 'Nepal': 'NP', 'Netherlands': 'NL', 'New Caledonia': 'NC', 'New Zealand': 'NZ', 'Nicaragua': 'NI', 'Niger': 'NE', 'Nigeria': 'NG', 'Niue': 'NU', 'Norfolk Island': 'NF', 'Northern Mariana Islands': 'MP', 'Norway': 'NO', 'Oman': 'OM', 'Pakistan': 'PK', 'Palau': 'PW', 'Palestine': 'PS', 'Panama': 'PA', 'Papua New Guinea': 'PG', 'Paraguay': 'PY', 'Peru': 'PE', 'Philippines': 'PH', 'Pitcairn': 'PN', 'Poland': 'PL', 'Portugal': 'PT', 'Puerto Rico': 'PR', 'Qatar': 'QA', 'Reunion and associated islands': 'RE', 'Romania': 'RO', 'Russia': 'RU', 'Rwanda': 'RW', 'Saint Barthelemy': 'BL', 'Saint Helena': 'SH', 'Saint Kitts and Nevis': 'KN', 'Saint Lucia': 'LC', 'Saint Martin (French part)': 'MF', 'Saint Pierre and Miquelon': 'PM', 'Saint Vincent and the Grenadines': 'VC', 'Samoa': 'WS', 'San Marino': 'SM', 'Sao Tome and Principe': 'ST', 'Saudi Arabia': 'SA', 'Senegal': 'SN', 'Serbia': 'RS', 'Seychelles': 'SC', 'Sierra Leone': 'SL', 'Singapore': 'SG', 'Sint Maarten (Dutch part)': 'SX', 'Slovakia': 'SK', 'Slovenia': 'SI', 'Solomon Islands': 'SB', 'Somalia': 'SO', 'South Africa': 'ZA', 'South Georgia and South Sandwich Islands': 'GS', 'South Sudan': 'SS', 'Spain': 'ES', 'Sri Lanka': 'LK', 'Sudan': 'SD', 'Suriname': 'SR', 'Svalbard and Jan Mayen': 'SJ', 'Swaziland': 'SZ', 'Sweden': 'SE', 'Switzerland': 'CH', 'Syrian Arab Republic': 'SY', 'Taiwan': 'TW', 'Tajikistan': 'TJ', 'Tanzania': 'TZ', 'Thailand': 'TH', 'Timor-Leste': 'TL', 'Togo': 'TG', 'Tokelau': 'TK', 'Tonga': 'TO', 'Trinidad and Tobago': 'TT', 'Tunisia': 'TN', 'Turkey': 'TR', 'Turkmenistan': 'TM', 'Turks and Caicos Islands': 'TC', 'Tuvalu': 'TV', 'Uganda': 'UG', 'Ukraine': 'UA', 'United Arab Emirates': 'AE', 'United Kingdom': 'GB', 'United States of America': 'US', 'United States Minor Outlying Islands': 'UM', 'Uruguay': 'UY', 'Uzbekistan': 'UZ', 'Vanuatu': 'VU', 'Venezuela': 'VE', 'Vietnam': 'VN', 'Virgin Islands': 'VG', 'Virgin Islands of the United States': 'VI', 'Wallis and Futuna': 'WF', 'Western Sahara': 'EH', 'Yemen': 'YE', 'Zambia': 'ZM', 'Zimbabwe': 'ZW'};
 
@@ -40,6 +58,8 @@ async function handleRequest(request) {
     if (timezone == null) { timezone = request.cf.timezone }
 
     let location = data.location?.name == null ? '?' : data.location.name;
+
+    let satellite = timezone.includes("America/");
 
     let index = null;
     if (data.current?.air_quality != null) {
@@ -69,7 +89,7 @@ async function handleRequest(request) {
     let windspeed = data.current?.wind_kph == null ? '?' : data.current.wind_kph;
     switch(country) {
         case 'US':
-        case 'UK':
+        case 'GB':
             windspeed = data.current?.wind_mph == null ? '?' : data.current.wind_mph + ' mph'
             break;
         case 'CA':
@@ -132,8 +152,9 @@ async function handleRequest(request) {
     }
 
     const epa = {0: 'Great', 1: 'Good', 2: 'Moderate', 3: 'Unhealthy For Some', 4: 'Unhealthy', 5: 'Very Unhealthy', 6: 'Hazardous'};
-
-    let icon = data.current?.condition?.icon == null ? '000' : data.current.condition.icon.slice(39, 42);
+    
+    let icon = data.current?.condition?.icon == null ? '000' : data.current.condition.icon.replace('.png', '').split('/');
+    icon = icon[icon.length - 2] + '/' + icon[icon.length - 1];
     let condition = data.current?.condition?.text == null ? '?' : data.current.condition.text;
     let humidity = data.current?.humidity == null ? '?' : data.current.humidity + '%';
     let winddegree = data.current?.wind_degree == null ? null : data.current.wind_degree;
@@ -141,6 +162,7 @@ async function handleRequest(request) {
     let winddirection = winddegree == null ? '?' : winddegree + '°';
     winddirection += windheading == null ? '' : windheading;
     let uvi = data.current?.uv == null ? '?' : data.current.uv + ' of 10';
+
     let aqi = index == null ? '?' : index + ` (${epa[index]})`;
     let pm25 = data.current?.air_quality?.pm2_5 == null ? '?' : (Math.round((data.current.air_quality.pm2_5 + Number.EPSILON) * 10) / 10) + ' μg/m³';
     let pm10 = data.current?.air_quality?.pm10 == null ? '?' : (Math.round((data.current.air_quality.pm10 + Number.EPSILON) * 10) / 10) + ' μg/m³';
@@ -148,6 +170,13 @@ async function handleRequest(request) {
     let co = data.current?.air_quality?.co == null ? '?' : (Math.round((data.current.air_quality.co + Number.EPSILON) * 10) / 10) + ' μg/m³';
     let no2 = data.current?.air_quality?.no2 == null ? '?' : (Math.round((data.current.air_quality.no2 + Number.EPSILON) * 10) / 10) + ' μg/m³';
     let so2 = data.current?.air_quality?.so2 == null ? '?' : (Math.round((data.current.air_quality.so2 + Number.EPSILON) * 10) / 10) + ' μg/m³';
+
+    let sunrise = datatoo.astronomy?.astro?.sunrise == null ? '?' : datatoo.astronomy.astro.sunrise;
+    let sunset = datatoo.astronomy?.astro?.sunset == null ? '?' : datatoo.astronomy.astro.sunset;
+    let moonrise = datatoo.astronomy?.astro?.moonrise == null ? '?' : datatoo.astronomy.astro.moonrise;
+    let moonset = datatoo.astronomy?.astro?.moonset == null ? '?' : datatoo.astronomy.astro.moonset;
+    let phase = datatoo.astronomy?.astro?.moon_phase == null ? '?' : datatoo.astronomy.astro.moon_phase;
+    let illumination = datatoo.astronomy?.astro?.moon_illumination == null ? '?' : datatoo.astronomy.astro.moon_illumination;
 
     let values = {
         "location": {
@@ -157,7 +186,8 @@ async function handleRequest(request) {
             "region": region,
             "country": country,
             "zone": timezone,
-            "data": location
+            "data": location,
+            "goes": satellite
         }, "weather": {
             "icon": icon,
             "condition": condition,
@@ -176,6 +206,13 @@ async function handleRequest(request) {
             "co": co,
             "no2": no2,
             "so2": so2
+        }, "astronomy": {
+            "sunrise": sunrise,
+            "sunset": sunset,
+            "moonrise": moonrise,
+            "moonset": moonset,
+            "phase": phase,
+            "illumination": illumination
         }
     };
 

@@ -13,6 +13,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LoaderComponent } from './components/loader/loader.component';
 import { InformationComponent } from './components/information/information.component';
 import { UnknownComponent } from './components/unknown/unknown.component';
+import { MapComponent } from './components/map/map.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { UnknownComponent } from './components/unknown/unknown.component';
     HomeComponent,
     LoaderComponent,
     InformationComponent,
-    UnknownComponent
+    UnknownComponent,
+    MapComponent
   ],
   imports: [
     CommonModule,

@@ -1,24 +1,172 @@
 <h1 class="nosel">
   <img
-    src="https://content.kpnc.io/img/kpnc/symbol/KPNC-T.webp"
+    *ngIf="!(response != null && success)"
+    src="https://content.kpnc.io/img/kpnc/symbol/KPNC-F.webp"
     alt="KPNC"
+  />
+  <img
+    *ngIf="response != null && success"
+    src="https://content.kpnc.io/img/kpnc/weather/{{response.weather.icon}}.webp"
+    alt="{{response.weather.icon}}"
   />
 </h1>
 
 <main class="container">
-  <h2 class="nosel">Shorten URLs:</h2>
+  <h2 class="nosel">Current Forecast:</h2>
   <h3 class="nosel">⤷ <a (click)="routerLink(['/information'])">See more</a>...</h3>
   <div class="box">
-    <p class="message" [ngClass]="{'fail': !success, 'succ': success}" *ngIf="message">{{message}}</p>
-    <div style="margin: 18px;" *ngIf="loading">
-      <app-loader></app-loader>
-    </div>
+    <small>Custom Search:</small>
     <form class="input nosel">
-      <input ngModel name="url" #url="ngModel" (change)="changed(url)" type="text" id="url" placeholder="https://www.example.com">
+      <input ngModel name="q" #q="ngModel" (change)="changed(q)" type="text" id="q" placeholder="Tokyo">
       <button (click)="clicked()">►</button>
     </form>
-    <p class="disclaimer nosel">
-      This URL shortening service is provided free-of-charge. The creators are not liable for any support or reliability pertaining to the service. The source code to this project can be found in a public <a href="https://github.com/kpncio/shortener">GitHub Repository</a> and is license under the MIT license. For more information check out said repository and see the <a (click)="routerLink(['/information'])">Information</a> page.
-    </p>
+    <div class="data" *ngIf="response != null && success">
+      <h2>Location Info:</h2>
+      <table>
+        <tr>
+          <td>Latitude:</td>
+          <td><input readonly value="{{response.location.lat}}"></td>
+        </tr>
+        <tr>
+          <td>Longitude:</td>
+          <td><input readonly value="{{response.location.long}}"></td>
+        </tr>
+        <tr>
+          <td>City:</td>
+          <td><input readonly value="{{response.location.city}}"></td>
+        </tr>
+        <tr>
+          <td>Region:</td>
+          <td><input readonly value="{{response.location.region}}"></td>
+        </tr>
+        <tr>
+          <td>Country:</td>
+          <td><input readonly value="{{response.location.country}}"></td>
+        </tr>
+        <tr>
+          <td>Timezone:</td>
+          <td><input readonly value="{{response.location.zone}}"></td>
+        </tr>
+        <tr>
+          <td>Data Point:</td>
+          <td><input readonly value="{{response.location.data}}"></td>
+        </tr>
+        <tr *ngIf="response.location.goes">
+          <td>Satellite:</td>
+          <td><input readonly value="GOES"></td>
+        </tr>
+      </table>
+      <h2>Weather Info:</h2>
+      <table>
+        <tr>
+          <td>Condition:</td>
+          <td><input readonly value="{{response.weather.condition}}"></td>
+        </tr>
+        <tr>
+          <td>Temperature:</td>
+          <td><input readonly value="{{response.weather.temperature}}"></td>
+        </tr>
+        <tr>
+          <td>Feels Like:</td>
+          <td><input readonly value="{{response.weather.feelslike}}"></td>
+        </tr>
+        <tr>
+          <td>Humidity:</td>
+          <td><input readonly value="{{response.weather.humidity}}"></td>
+        </tr>
+        <tr>
+          <td>Wind Speed:</td>
+          <td><input readonly value="{{response.weather.windspeed}}"></td>
+        </tr>
+        <tr>
+          <td>Wind Direction:</td>
+          <td><input readonly value="{{response.weather.winddirection}}"></td>
+        </tr>
+        <tr>
+          <td>Pressure:</td>
+          <td><input readonly value="{{response.weather.pressure}}"></td>
+        </tr>
+        <tr>
+          <td>UVI:</td>
+          <td><input readonly value="{{response.weather.uvi}}"></td>
+        </tr>
+      </table>
+      <h2>Air Quality:</h2>
+      <table>
+        <tr>
+          <td>AQI:</td>
+          <td><input readonly value="{{response.airquality.aqi}}"></td>
+        </tr>
+        <tr>
+          <td>PM2.5:</td>
+          <td><input readonly value="{{response.airquality.pm25}}"></td>
+        </tr>
+        <tr>
+          <td>PM10:</td>
+          <td><input readonly value="{{response.airquality.pm10}}"></td>
+        </tr>
+        <tr>
+          <td>O<sub>3</sub>:</td>
+          <td><input readonly value="{{response.airquality.o3}}"></td>
+        </tr>
+        <tr>
+          <td>CO:</td>
+          <td><input readonly value="{{response.airquality.co}}"></td>
+        </tr>
+        <tr>
+          <td>NO<sub>2</sub>:</td>
+          <td><input readonly value="{{response.airquality.no2}}"></td>
+        </tr>
+        <tr>
+          <td>SO<sub>2</sub>:</td>
+          <td><input readonly value="{{response.airquality.so2}}"></td>
+        </tr>
+      </table>
+      <h2>Astronomy:</h2>
+      <table>
+        <tr>
+          <td>Sunrise:</td>
+          <td><input readonly value="{{response.astronomy.sunrise}}"></td>
+        </tr>
+        <tr>
+          <td>Sunset:</td>
+          <td><input readonly value="{{response.astronomy.sunset}}"></td>
+        </tr>
+        <tr>
+          <td>Moonrise:</td>
+          <td><input readonly value="{{response.astronomy.moonrise}}"></td>
+        </tr>
+        <tr>
+          <td>Moonset:</td>
+          <td><input readonly value="{{response.astronomy.moonset}}"></td>
+        </tr>
+        <tr>
+          <td>Moon Phase:</td>
+          <td><input readonly value="{{response.astronomy.phase}}"></td>
+        </tr>
+        <tr>
+          <td>Illumination:</td>
+          <td><input readonly value="{{response.astronomy.illumination}}"></td>
+        </tr>
+      </table>
+      <div class="tab nosel" (click)="satellite = true" *ngIf="!satellite && response.location.goes">
+        <a>Satellite</a>
+      </div>
+      <div class="nosel" *ngIf="satellite && response.location.goes">
+        <h2>Satellite:</h2>
+        <div class="gallery">
+          
+        </div>
+      </div>
+      <h2>Map Visual:</h2>
+      <div class="map nosel">
+        <app-map [lat]="response.location.lat" [long]="response.location.long" [data]="response.location.data"></app-map>
+      </div>
+    </div>
+    <p class="message nosel" [ngClass]="{'fail': !success, 'succ': success}" *ngIf="message">{{message}}</p>
+    <div class="nosel" style="margin: 18px;" *ngIf="loading">
+      <app-loader></app-loader>
+    </div>
   </div>
 </main>
+
