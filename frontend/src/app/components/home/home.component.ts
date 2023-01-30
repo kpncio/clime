@@ -69,12 +69,18 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.override = this.route.snapshot.paramMap.get('or') != null ? this.route.snapshot.paramMap.get('or')!.toUpperCase() : null;
+    this.message = 'Block or allow location API...';
 
-    if (this.override != null) {
-      this.retrieval(`https://app.kpnc.io/forecaster/api/?or=${this.override}`);
-    } else {
-      this.retrieval(`https://app.kpnc.io/forecaster/api/`);
-    }
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.q = position.coords.latitude + ',' + position.coords.longitude;
+      this.message = '';
+
+      this.clicked();
+    }, () => {
+      this.message = '';
+
+      this.clicked();
+    });
   }
 
   routerLink(route: any[]): void {
