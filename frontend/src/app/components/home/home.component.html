@@ -35,7 +35,7 @@
           <td>City:</td>
           <td><input readonly value="{{response.location.city}}"></td>
         </tr>
-        <tr>
+        <tr *ngIf="response.location.region != ''">
           <td>Region:</td>
           <td><input readonly value="{{response.location.region}}"></td>
         </tr>

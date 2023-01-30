@@ -1,6 +1,6 @@
 import { FetchService } from 'src/app/services/fetch.service';
 import { Component, NgZone, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export interface IForecast {
   location: {
@@ -57,6 +57,7 @@ export interface IForecast {
 })
 export class HomeComponent implements OnInit {
   response: IForecast | null = null;
+  override: string | null = null;
   astronomy: boolean = false;
   satellite: boolean = false;
   loading: boolean = false;
@@ -64,10 +65,16 @@ export class HomeComponent implements OnInit {
   message: string = '';
   q: string = '';
 
-  constructor(private router: Router, private ngZone: NgZone, private fetch: FetchService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private ngZone: NgZone, private fetch: FetchService) {}
 
   ngOnInit(): void {
-    this.retrieval(`https://app.kpnc.io/forecaster/api/`);
+    this.override = this.route.snapshot.paramMap.get('or') != null ? this.route.snapshot.paramMap.get('or')!.toUpperCase() : null;
+
+    if (this.override != null) {
+      this.retrieval(`https://app.kpnc.io/forecaster/api/?or=${this.override}`);
+    } else {
+      this.retrieval(`https://app.kpnc.io/forecaster/api/`);
+    }
   }
 
   routerLink(route: any[]): void {
@@ -80,9 +87,17 @@ export class HomeComponent implements OnInit {
 
   clicked(): void {
     if(this.q != '') {
-      this.retrieval(`https://app.kpnc.io/forecaster/api/?nav=${this.q}`);
+      if (this.override != null) {
+        this.retrieval(`https://app.kpnc.io/forecaster/api/?nav=${this.q}&or=${this.override}`);
+      } else {
+        this.retrieval(`https://app.kpnc.io/forecaster/api/?nav=${this.q}`);
+      }
     } else {
-      this.retrieval(`https://app.kpnc.io/forecaster/api/`);
+      if (this.override != null) {
+        this.retrieval(`https://app.kpnc.io/forecaster/api/?or=${this.override}`);
+      } else {
+        this.retrieval(`https://app.kpnc.io/forecaster/api/`);
+      }
     }
   }
 

@@ -7,6 +7,7 @@ import { UnknownComponent } from './components/unknown/unknown.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent},
+  { path: 'locale/:or', component: HomeComponent},
   { path: 'information', component: InformationComponent},
   { path: '**', component: UnknownComponent}
 ];

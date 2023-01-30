@@ -4,6 +4,7 @@
 async function handleRequest(request) {
 	const { searchParams } = new URL(request.url);
     let nav = searchParams.get('nav');
+    let or = searchParams.get('or');
 
     let latitude = String(request.cf.latitude);
     let longitude = String(request.cf.longitude);
@@ -56,6 +57,10 @@ async function handleRequest(request) {
     if (region == null) { region = request.cf.region }
     if (country == null) { country = request.cf.country }
     if (timezone == null) { timezone = request.cf.timezone }
+    
+    let override = country;
+    if (override == null) { override = request.cf.country }
+    if (or != null) { override = or }
 
     let location = data.location?.name == null ? '?' : data.location.name;
 
@@ -67,7 +72,7 @@ async function handleRequest(request) {
     }
 
     let temperature = null;
-    switch(country) {
+    switch(override) {
         case 'US':
             temperature = data.current?.temp_f == null ? '?' : data.current.temp_f + '°F';
             break;
@@ -77,7 +82,7 @@ async function handleRequest(request) {
     }
 
     let feelslike = null;
-    switch(country) {
+    switch(override) {
         case 'US':
             feelslike = data.current?.feelslike_f == null ? '?' : data.current.feelslike_f + '°F';
             break;
@@ -87,7 +92,7 @@ async function handleRequest(request) {
     }
 
     let windspeed = data.current?.wind_kph == null ? '?' : data.current.wind_kph;
-    switch(country) {
+    switch(override) {
         case 'US':
         case 'GB':
             windspeed = data.current?.wind_mph == null ? '?' : data.current.wind_mph + ' mph'
@@ -121,7 +126,7 @@ async function handleRequest(request) {
     }
 
     let pressure = data.current?.pressure_mb == null ? '?' : data.current.pressure_mb;
-    switch(country) {
+    switch(override) {
         case 'US':
             pressure = data.current?.pressure_in == null ? '?' : data.current.pressure_in + ' inHg';
             break;
