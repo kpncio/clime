@@ -1,12 +1,12 @@
 <div class="card">
-    <h3><span>{{title}}</span> <br> <h4>{{sub}}</h4></h3>
+    <h3 style="pointer-events: none"><span>{{title}}</span> <br> <h4>{{sub}}</h4></h3>
     <img
         (click)="imager()" style="aspect-ratio: {{satellite.resolution.split('x')[0]}}/{{satellite.resolution.split('x')[1]}};"
-        src="https://cdn.star.nesdis.noaa.gov/{{satellite.series}}{{satellite.designator}}/{{product[0]}}/{{satellite.sector}}/{{product[1]}}/thumbnail.jpg"
+        src="https://cdn.star.nesdis.noaa.gov/{{satellite.series}}{{satellite.designator}}/{{product[0]}}/{{satellite.sector}}/{{product[1]}}/{{satellite.resolution}}.jpg"
+        ngxViewer
     >
     <div class="padder"></div>
     <div class="buttons">
-        <img (click)="imager()" src="https://content.kpnc.io/img/kpnc/weather/fullscreen.b.webp" alt="F">
         <img
             (click)="opener('https://content.kpnc.io/pdf/GOES/' + product[1] + '.pdf')"
             src="https://content.kpnc.io/img/kpnc/weather/information.b.webp" alt="I"

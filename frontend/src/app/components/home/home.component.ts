@@ -88,6 +88,7 @@ export class HomeComponent implements OnInit {
 
   retrieval(url: string): void {
     let time = performance.now()
+    this.satellite = false;
 
     this.response = null;
 

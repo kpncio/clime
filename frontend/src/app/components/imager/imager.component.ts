@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 
 export interface ISatellite {
@@ -15,15 +15,11 @@ export interface ISatellite {
   templateUrl: './imager.component.html',
   styleUrls: ['./imager.component.scss']
 })
-export class ImagerComponent implements OnInit {
+export class ImagerComponent {
   @Input() satellite!: ISatellite;
   @Input() product!: string[];
   @Input() title!: string;
   @Input() sub!: string;
-
-  ngOnInit(): void {
-    
-  }
 
   imager(): void {
     
