@@ -14,6 +14,7 @@ import { LoaderComponent } from './components/loader/loader.component';
 import { InformationComponent } from './components/information/information.component';
 import { UnknownComponent } from './components/unknown/unknown.component';
 import { MapComponent } from './components/map/map.component';
+import { ImagerComponent } from './components/imager/imager.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { MapComponent } from './components/map/map.component';
     LoaderComponent,
     InformationComponent,
     UnknownComponent,
-    MapComponent
+    MapComponent,
+    ImagerComponent
   ],
   imports: [
     CommonModule,

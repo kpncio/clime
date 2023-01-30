@@ -51,9 +51,9 @@
           <td>Data Point:</td>
           <td><input readonly value="{{response.location.data}}"></td>
         </tr>
-        <tr *ngIf="response.location.goes">
+        <tr *ngIf="response.satellite.access">
           <td>Satellite:</td>
-          <td><input readonly value="GOES"></td>
+          <td><input readonly value="{{response.satellite.series}}-{{response.satellite.designator}}"></td>
         </tr>
       </table>
       <h2>Weather Info:</h2>
@@ -149,13 +149,164 @@
           <td><input readonly value="{{response.astronomy.illumination}}"></td>
         </tr>
       </table>
-      <div class="tab nosel" (click)="satellite = true" *ngIf="!satellite && response.location.goes">
+      <div class="tab nosel" (click)="satellite = true" *ngIf="!satellite && response.satellite.access">
         <a>Satellite</a>
       </div>
-      <div class="nosel" *ngIf="satellite && response.location.goes">
+      <div class="nosel" *ngIf="satellite && response.satellite.access">
         <h2>Satellite:</h2>
         <div class="gallery">
-          
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', 'GEOCOLOR']"
+            [title]="'GeoColor'"
+            [sub]="'True Color daytime and multispectral IR at night'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['GLM', 'EXTENT3']"
+            [title]="'GLM FED3'"
+            [sub]="'Lightning flash textent density over GeoColor'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', 'AirMass']"
+            [title]="'AirMass RGB'"
+            [sub]="'RGB based on data from IR & water vapor'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', 'Sandwich']"
+            [title]="'Sandwich RGB'"
+            [sub]="'Blend combines IR band 13 with NIR band 3'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', 'DayNightCloudMicroCombo']"
+            [title]="'Day Night Cloud Micro Combo RGB'"
+            [sub]="'DayCloudPhase & NightMicrophysics Combo'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', 'DayCloudPhase']"
+            [title]="'Day Cloud Phase RGB'"
+            [sub]="'Show phase of cooling cloud tops'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', 'NightMicrophysics']"
+            [title]="'Nighttime Mycrophysics'"
+            [sub]="'RGB to distinguish clouds from fog'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', 'FireTemperature']"
+            [title]="'Fire Temperature'"
+            [sub]="'RGB used to highlight fires'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', 'Dust']"
+            [title]="'Dust RGB'"
+            [sub]="'RGB for identifying tropospheric dust'"
+          ></app-imager>
+
+
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '01']"
+            [title]="'Band 1'"
+            [sub]="'Visible (0.47μm): Blue'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '02']"
+            [title]="'Band 2'"
+            [sub]="'Visible (0.64μm): Red'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '03']"
+            [title]="'Band 3'"
+            [sub]="'Near IR (0.86μm): Veggie'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '04']"
+            [title]="'Band 4'"
+            [sub]="'Near IR (1.37μm): Cirrus'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '05']"
+            [title]="'Band 5'"
+            [sub]="'Near IR (1.6μm): Snow/Ice'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '06']"
+            [title]="'Band 6'"
+            [sub]="'Near IR (2.2μm): Cloud Particle'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '07']"
+            [title]="'Band 7'"
+            [sub]="'IR (3.9μm): Shortwave Window'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '08']"
+            [title]="'Band 8'"
+            [sub]="'IR (6.2μm): Upper-level Water Vapor'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '09']"
+            [title]="'Band 9'"
+            [sub]="'IR (6.9μm): Mid-level Water Vapor'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '10']"
+            [title]="'Band 10'"
+            [sub]="'IR (7.3μm): Lower-level Water Vapor'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '11']"
+            [title]="'Band 11'"
+            [sub]="'IR (8.4μm): Cloud Top'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '12']"
+            [title]="'Band 12'"
+            [sub]="'IR (9.6μm): Ozone'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '13']"
+            [title]="'Band 13'"
+            [sub]="'IR (10.3μm): Clean Longwave Window'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '14']"
+            [title]="'Band 14'"
+            [sub]="'IR (11.2μm): Longwave Window'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '15']"
+            [title]="'Band 15'"
+            [sub]="'IR (12.3μm): Dirty Longwave Window'"
+          ></app-imager>
+          <app-imager
+            [satellite]="response.satellite"
+            [product]="['ABI', '16']"
+            [title]="'Band 16'"
+            [sub]="'IR (13.3μm): CO2 Longwave'"
+          ></app-imager>
         </div>
       </div>
       <h2>Map Visual:</h2>

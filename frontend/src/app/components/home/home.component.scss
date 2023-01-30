@@ -194,10 +194,12 @@ h1 {
     }
 
     .gallery {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      border: solid $light 1px;
+      display: grid;
+      grid-column-gap: 30px;
+      grid-template-rows: auto;
+      align-content: space-evenly;
+      justify-content: space-between;
+      grid-template-columns: repeat(2, 1fr);
     }
 
     .map {
@@ -232,13 +234,11 @@ h1 {
 @media (max-width: 800px) {
   .box {
     width: 80%;
-    margin: 0 auto;
   }
 }
 
 @media (max-width: 600px) {
   .box {
     width: 100%;
-    margin: 0 auto;
   }
 }

@@ -1,5 +1,5 @@
 import { FetchService } from 'src/app/services/fetch.service';
-import { Component, NgZone, OnInit, ɵɵsetComponentScope } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 export interface IForecast {
@@ -11,7 +11,6 @@ export interface IForecast {
     country: string;
     zone: string;
     data: string;
-    goes: boolean;
   };
   weather: {
     icon: string;
@@ -40,6 +39,14 @@ export interface IForecast {
     moonset: string;
     phase: string;
     illumination: string;
+  };
+  satellite: {
+    access: boolean;
+    agency: string;
+    series: string;
+    designator: string;
+    sector: string;
+    resolution: string;
   };
 }
 

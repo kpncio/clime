@@ -92,23 +92,8 @@ async function handleRequest(request) {
         case 'GB':
             windspeed = data.current?.wind_mph == null ? '?' : data.current.wind_mph + ' mph'
             break;
-        case 'CA':
-        case 'IE':
-        case 'DE':
-        case 'PL':
-        case 'BE':    
-        case 'FR':
-        case 'MD':
-        case 'AT':
-        case 'CH':
-        case 'IT':
-        case 'SI':
-        case 'TR':
-        case 'ES':
-        case 'PT':
-        case 'JO':
-        case 'IL':
-        case 'AU':
+        case 'CA': case 'IE': case 'DE': case 'PL': case 'BE': case 'FR': case 'MD': case 'IL': case 'AU':
+        case 'AT': case 'CH': case 'IT': case 'SI':  case 'TR': case 'ES': case 'PT': case 'JO':
             windspeed = windspeed == '?' ? '?' : windspeed + ' km/h';
             break;
         case 'MT':
@@ -178,6 +163,123 @@ async function handleRequest(request) {
     let phase = datatoo.astronomy?.astro?.moon_phase == null ? '?' : datatoo.astronomy.astro.moon_phase;
     let illumination = datatoo.astronomy?.astro?.moon_illumination == null ? '?' : datatoo.astronomy.astro.moon_illumination;
 
+    let agency = null;
+    let series = null;
+    let designator = null;
+    let sector = null;
+    let resolution = null;
+
+    switch(country) {
+        case 'MX':
+            agency = 'NOAA/STAR'; series = 'GOES';
+            designator = '16'; sector = 'SECTOR/mex';
+            resolution = '4000x4000';
+            break;
+        case 'CA':
+            agency = 'NOAA/STAR'; series = 'GOES';
+            designator = '16'; sector = 'SECTOR/can';
+            resolution = '9000x4500';
+            break;
+        case 'KY': case 'BZ': case 'GT': case 'SV': case 'HN': case 'CR': case 'PA': case 'NI':
+            agency = 'NOAA/STAR'; series = 'GOES';
+            designator = '16'; sector = 'SECTOR/cam';
+            resolution = '4000x4000';
+            break;
+        case 'PR':
+            agency = 'NOAA/STAR'; series = 'GOES';
+            designator = '16'; sector = 'SECTOR/pr';
+            resolution = '2400x2400';
+            break;
+        case 'BS': case 'CU': case 'JM': case 'TC': case 'HT': case 'DM': case 'DO': case 'VG': case 'GP': case 'AI': case 'MQ': case 'VC': case 'GD': case 'BB':
+            agency = 'NOAA/STAR'; series = 'GOES';
+            designator = '16'; sector = 'SECTOR/taw';
+            resolution = '7200x4320';
+            break;
+        case 'AW': case 'CW': case 'TT': case 'VE': case 'GY': case 'SR': case 'GF': case 'CO': case 'EC': case 'PE': case 'BR':
+            agency = 'NOAA/STAR'; series = 'GOES';
+            designator = '16'; sector = 'SECTOR/nsa';
+            resolution = '7200x4320';
+            break;
+        case 'BO': case 'CL': case 'PY': case 'UY': case 'AR': case 'FK': case 'GS':
+            agency = 'NOAA/STAR'; series = 'GOES';
+            designator = '16'; sector = 'SECTOR/ssa';
+            resolution = '7200x4320';
+            break;
+        default:
+            agency = 'NOAA/STAR'; series = 'GOES';
+            designator = '16'; sector = 'CONUS';
+            resolution = '5000x3000';
+            break;
+    }
+
+    if(country == 'US') {
+        switch(region) {
+            case 'Indiana': case 'Ohio': case 'Michigan':
+            agency = 'NOAA/STAR'; series = 'GOES';
+            designator = '16'; sector = 'SECTOR/cgl';
+            resolution = '2400x2400';
+            break;
+            case 'Florida': case 'Georgia': case 'North Carolina': case 'South Carolina':
+                agency = 'NOAA/STAR'; series = 'GOES';
+                designator = '16'; sector = 'SECTOR/se';
+                resolution = '2400x2400';
+                break;
+            case 'Louisiana': case 'Arkansas': case 'Mississippi': case 'Alabama': case 'Tennessee':
+                agency = 'NOAA/STAR'; series = 'GOES';
+                designator = '16'; sector = 'SECTOR/smv';
+                resolution = '2400x2400';
+                break;
+            case 'Texas': case 'Oklahoma':
+                agency = 'NOAA/STAR'; series = 'GOES';
+                designator = '16'; sector = 'SECTOR/sp';
+                resolution = '2400x2400';
+                break;
+            case 'Utah': case 'Arizona': case 'Colorado': case 'New Mexico':
+                agency = 'NOAA/STAR'; series = 'GOES';
+                designator = '16'; sector = 'SECTOR/sr';
+                resolution = '2400x2400';
+                break;
+            case 'New York': case 'Maine': case 'Vermont': case 'New Hampshire': case 'Massachusetts': case 'Connecticut': case 'Rhode Island':
+            case 'Pennsylvania': case 'West Virginia': case 'Virginia': case 'Maryland': case 'New Jersey': case 'Delaware':
+                agency = 'NOAA/STAR'; series = 'GOES';
+                designator = '16'; sector = 'SECTOR/ne';
+                resolution = '2400x2400';
+                break;
+            case 'Kansas': case 'Missouri': case 'Illinois': case 'Iowa': case 'Minnesota':
+            case 'Wisconsin': case 'North Dakota': case 'South Dakota': case 'Nebraska':
+                agency = 'NOAA/STAR'; series = 'GOES';
+                designator = '16'; sector = 'SECTOR/umv';
+                resolution = '2400x2400';
+                break;
+            case 'Montana': case 'Wyoming':
+                agency = 'NOAA/STAR'; series = 'GOES';
+                designator = '16'; sector = 'SECTOR/nr';
+                resolution = '2400x2400';
+                break;
+            case 'California': case 'Nevada':
+                agency = 'NOAA/STAR'; series = 'GOES';
+                designator = '18'; sector = 'SECTOR/psw';
+                resolution = '2400x2400';
+                break;
+            case 'Washington': case 'Oregon': case 'Idaho':
+                agency = 'NOAA/STAR'; series = 'GOES';
+                designator = '18'; sector = 'SECTOR/pnw';
+                resolution = '2400x2400';
+                break;
+            case 'Alaska':
+                agency = 'NOAA/STAR'; series = 'GOES';
+                designator = '18'; sector = 'SECTOR/cak';
+                resolution = '2400x2400';
+                break;
+            case 'Hawaii':
+                agency = 'NOAA/STAR'; series = 'GOES';
+                designator = '18'; sector = 'SECTOR/hi';
+                resolution = '2400x2400';
+                break;
+            default: break;
+        }
+    }
+
     let values = {
         "location": {
             "lat": latitude,
@@ -186,8 +288,7 @@ async function handleRequest(request) {
             "region": region,
             "country": country,
             "zone": timezone,
-            "data": location,
-            "goes": satellite
+            "data": location
         }, "weather": {
             "icon": icon,
             "condition": condition,
@@ -213,6 +314,13 @@ async function handleRequest(request) {
             "moonset": moonset,
             "phase": phase,
             "illumination": illumination
+        }, "satellite": {
+            "access": satellite,
+            "agency": agency,
+            "series": series,
+            "designator": designator,
+            "sector": sector,
+            "resolution": resolution
         }
     };
 
