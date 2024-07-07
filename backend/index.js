@@ -1,5 +1,5 @@
 // Expects: Nothing:
-// https://app.kpnc.io/forecaster/api/
+// https://app.kpnc.io/clime/api/
 
 async function handleRequest(request) {
 	const { searchParams } = new URL(request.url);

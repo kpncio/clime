@@ -1,4 +1,4 @@
-name = "forecaster"
+name = "clime"
 main = "index.js"
 compatibility_date = "2023-01-24"
 

@@ -1,6 +1,6 @@
 
-# Forecaster
+# Climes
 
-*(Cloudflare Workers, WeatherAPI.com)*
+*(Cloudflare Workers, WeatherAPI.com, AQICN.org)*
 
-KPNC Technology: Forecaster: A serverless application that gives information on your local environment...
+KPNC Technology: Climes is a serverless application that gives information on your local climate...
