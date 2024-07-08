@@ -94,15 +94,15 @@ export class HomeComponent implements OnInit {
   clicked(): void {
     if(this.q != '') {
       if (this.override != null) {
-        this.retrieval(`https://app.kpnc.io/forecaster/api/?nav=${this.q}&or=${this.override}`);
+        this.retrieval(`https://app.kpnc.io/clime/api/?nav=${this.q}&or=${this.override}`);
       } else {
-        this.retrieval(`https://app.kpnc.io/forecaster/api/?nav=${this.q}`);
+        this.retrieval(`https://app.kpnc.io/clime/api/?nav=${this.q}`);
       }
     } else {
       if (this.override != null) {
-        this.retrieval(`https://app.kpnc.io/forecaster/api/?or=${this.override}`);
+        this.retrieval(`https://app.kpnc.io/clime/api/?or=${this.override}`);
       } else {
-        this.retrieval(`https://app.kpnc.io/forecaster/api/`);
+        this.retrieval(`https://app.kpnc.io/clime/api/`);
       }
     }
   }
